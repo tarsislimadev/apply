@@ -1,0 +1,29 @@
+version: '3'
+
+services:
+
+  git:
+    image: 'git'
+    build: './src/git'
+    ports:
+      - '2020:22'
+    # networks:
+    #   - 'host'
+
+  github-release:
+    image: 'github-release'
+    build: './src'
+
+  www:
+    image: 'tmvdl/projects:apply'
+    build: './src/www'
+    volumes:
+      - './src/www/html:/usr/share/nginx/html'
+    ports:
+      - '3030:80'
+    # networks:
+    #   - 'host'
+
+networks:
+  host:
+    external: true
