@@ -8,7 +8,7 @@ class Response {
   body = { status: 'ok', message: null, data: {} }
 
   setError(e = new ApplicationError()) {
-    error('setError', { e })
+    error('src/api/libs/http/response.js:Response.setError', e)
 
     const { stack } = e
 
@@ -26,15 +26,18 @@ class Response {
   }
 
   setJSON(json = {}) {
-    info('setJSON', { json })
+    info('src/api/libs/http/response.js:Response.setJSON', { json })
 
+    this.status = STATUS.OK
+    this.body.status = 'OK'
+    this.body.message = null
     this.body.data = JSON.parse(JSON.stringify(json))
 
     return this
   }
 
   parseStatusMessage(status) {
-    info('parseStatusMessage', { status })
+    info('src/api/libs/http/response.js:Response.parseStatusMessage', { status })
 
     switch (status) {
       case 200: return 'OK'
@@ -47,25 +50,25 @@ class Response {
   }
 
   toJSON() {
-    info('toJSON')
+    info('src/api/libs/http/response.js:Response.toJSON', {})
 
     return this.body
   }
 
   getBodyString() {
-    info('getBodyString')
+    info('src/api/libs/http/response.js:Response.getBodyString', {})
 
     return JSON.stringify(this.toJSON(), null, 4)
   }
 
   parseContentLength(body = '') {
-    info('parseContentLength', { body })
+    info('src/api/libs/http/response.js:Response.parseContentLength', { body })
 
     return +Buffer.from([...body]).lenght
   }
 
   getFirstLine() {
-    info('getFirstLine')
+    info('src/api/libs/http/response.js:Response.getFirstLine', {})
 
     const { status } = this
     const statusMessage = this.parseStatusMessage(status)
@@ -74,13 +77,13 @@ class Response {
   }
 
   getContentTypeLine() {
-    info('getContentTypeLine')
+    info('src/api/libs/http/response.js:Response.getContentTypeLine', {})
 
     return 'Content-Type: application/json'
   }
 
   toString() {
-    info('toString')
+    info('src/api/libs/http/response.js:Response.toString', {})
 
     const strArr = []
     strArr.push(this.getFirstLine())

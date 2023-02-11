@@ -87,7 +87,8 @@ class Request {
   parseBody({ chunk = EMPTY }) {
     info('libs/http/request/Request.parseBody', { chunk })
 
-    // FIXME
+    const lines = this.splitLines({ chunk })
+    return JSON.parse(lines[lines.length - 1])
   }
 }
 
