@@ -11,14 +11,53 @@
 <body>
   <div id="app"></div>
 
-  <script module="true" src="./js/nElement.js"></script>
-  <script module="true" src="./js/api.js"></script>
-  <script module="true">
-    const app = new nElement()
+  <script src="/js/nElement.js"></script>
+  <script src="/js/api.js"></script>
+  <script src="/js/flow.js"></script>
+  <script>
+    const app = nElement.fromId('app')
 
-    console.log({ app })
+    const title = new nH1()
+    title.setText('Apply')
+    app.append(title)
 
-    
+    const errorMessage = new nError()
+    app.append(errorMessage)
+
+    const usernameInput = new nInputTextGroup()
+    usernameInput.label.setText('User')
+    usernameInput.input.placeholder('username')
+    app.append(usernameInput)
+
+    const passwordInput = new nInputTextGroup()
+    passwordInput.label.setText('Pass')
+    passwordInput.input.placeholder('password')
+    app.append(passwordInput)
+
+    const button = new nButton()
+    button.setText('enter')
+    button.on('click', () => {
+      const username = usernameInput.input.getValue()
+      const password = passwordInput.input.getValue()
+
+      usernameInput.error.clear() 
+      passwordInput.error.clear() 
+
+      API.login({ username, password })
+        .then((res) => Flow.goTo('/dashboard/'))
+        .catch((err) => {
+          console.error(err)
+
+          if (err.type == 'validation') {
+            usernameInput.error.setText(err.get('username'))
+            passwordInput.error.setText(err.get('password'))
+          } else {
+            errorMessage.setText(err.message)
+          }
+        })
+    })
+    app.append(button)
+
   </script>
 </body>
 
