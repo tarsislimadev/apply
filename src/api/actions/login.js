@@ -7,8 +7,11 @@ const login = ({
 }) => {
   logger.info('actions/login', { username, password })
 
-  const { id: token } = db.in('logins').new().writeMany({ username, password })
-  return { token }
+  const login = db.in('logins').new()
+
+  login.writeMany({ username, password })
+
+  return { token: login.id }
 }
 
 module.exports = login
