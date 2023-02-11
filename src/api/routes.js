@@ -1,27 +1,37 @@
+const { info, log } = require('./libs/logger')
 const router = require('./libs/router')
-
-const { info } = require('./libs/logger')
-
 const actions = require('./actions')
+const db = require('./libs/db')
 
-router.use('login').do(({ query }, res) => {
+router.use('api/v1/accounts/login').do(({ query }, res) => {
   info('routes/login', { query, res })
 
-  return res.setJSON(actions.login({
+  const login = db.in('logins').new()
+
+  login.writeMany({
     username: query.username?.[0],
     password: query.password?.[0],
-  }))
+  })
+
+  return res.setJSON({ token: login.id })
 })
 
-router.use('createuser').do(({ query, header }, res) => {
-  info('routes/createuser', { query, header, res })
+router.use('api/v1/projects').do(async (req, res) => {
+  info('routes/projects', { req, res })
 
-  const token = query.token[0]
-  const username = query.username[0]
-  const password = query.password[0]
-  const host = query.host?.[0]
+  const list = db.in('projects').listJSON()
 
-  return res.setJSON(actions.createuser({ token, username, password, host, }))
+  return res.setJSON({ list })
+})
+
+router.use('api/v1/projects/save').do(async (req, res) => {
+  info('routes/projects/save', { req, res })
+
+  const project = db.in('projects').new()
+
+  project.writeMany(req.body)
+
+  return res.setJSON({ id: project.id })
 })
 
 module.exports = router
