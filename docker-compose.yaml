@@ -7,8 +7,6 @@ services:
     build: './src/git'
     ports:
       - '2020:22'
-    # networks:
-    #   - 'host'
 
   github-release:
     image: 'github-release'
@@ -20,9 +18,7 @@ services:
     volumes:
       - './src/www/html:/usr/share/nginx/html'
     ports:
-      - '3030:80'
-    # networks:
-    #   - 'host'
+      - '80:80'
 
 networks:
   host:
