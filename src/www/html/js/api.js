@@ -1,10 +1,8 @@
 
 class Response {
-  constructor({ status, message, data } = {}) {
-    this.status = status
-    this.message = message
-    this.data = data
-  }
+  status = null
+  message = null
+  data = {}
 
   getData() {
     return this.data || {}
@@ -24,22 +22,28 @@ class Response {
 }
 
 class SuccessResponse extends Response {
-  constructor(data = {}) {
-    super({
-      status: 'ok',
-      message: null,
-      data
-    })
+  constructor({ responseText }) {
+    super()
+
+    const { status, message, data } = JSON.parse(responseText)
+
+    this.status = status
+    this.message = message
+    this.data = data
   }
 }
 
 class ErrorResponse extends Response {
-  constructor(err = new Error) {
-    super({
-      status: 'error',
-      message: err.message,
-      data: { stack: err.stack }
-    })
+  constructor(type, { responseText }) {
+    super()
+
+    this.type = type
+
+    const { status, message, data } = JSON.parse(responseText)
+
+    this.status = status
+    this.message = message
+    this.data = data
   }
 }
 
@@ -53,8 +57,10 @@ const Local = function (id = '') {
   self.get = function (paths = [], def = null) {
     return new Promise((resolve) => {
       try {
-        const local = localStorage.getItem(self.named(paths))
-        resolve(new SuccessResponse(JSON.parse(local)))
+        const data = JSON.parse(localStorage.getItem(self.named(paths)))
+        const responseText =  JSON.stringify({ status: 'ok', message: null, data })
+
+        resolve(new SuccessResponse({ responseText }))
       } catch (e) {
         console.error(e)
         resolve(def)
@@ -68,7 +74,7 @@ const Local = function (id = '') {
         localStorage.setItem(self.named(paths), JSON.stringify(data))
         resolve(new SuccessResponse({}))
       } catch (e) {
-        reject(new ErrorResponse(e))
+        reject(e)
       }
     })
   }
@@ -84,12 +90,136 @@ const Local = function (id = '') {
   }
 }
 
-const goTo = (location, value = null) => (window.location = location)
+class Flow {
+  static local() {
+    return new Local('flow')
+  }
+
+  static localSet(name, value = '') {
+    return Flow.local().set(name, value)
+  }
+
+  static localGet(name, def) {
+    return Flow.local().get(name, def)
+  }
+
+  static goTo(name, value = {}) {
+    Flow.localSet(name, value)
+
+      (window.location = name)
+  }
+}
+
+// //
+// // //
+// //
+// // //
 
 const l = new Local('api')
 
+const Ajax = {
+  BASE_URL: 'http://0.0.0.0/api/v1',
+  post: (paths = [], data = {}) => {
+    return new Promise((resolve, reject) => {
+      const xhr = new XMLHttpRequest()
+      xhr.open('POST', [Ajax.BASE_URL, ...paths].join('/'), true)
+
+
+      const onComplete = (xhr) => (xhr.status == '200')
+        ? resolve(new SuccessResponse(xhr))
+        : reject(new ErrorResponse('network', xhr))
+
+      xhr.onload = () => onComplete(xhr)
+      xhr.onerror = () => onComplete(xhr)
+
+      xhr.send(JSON.stringify(data))
+    })
+  }
+}
+
+const Validator = ({
+  rules: {
+    required: (value, errorMessage = 'Required field.') => {
+      return value ? null : errorMessage
+    },
+  },
+
+  errorrer: function () {
+    const self = this
+
+    self.errors = {}
+
+    self.add = function (name) {
+      self.errors[name] = []
+      return self
+    }
+
+    self.setError = function (name, message) {
+      if (message) {
+        self.errors[name].push(message)
+      }
+
+      return self
+    }
+
+    self.toString = function () {
+      return JSON.stringify(self.errors)
+    }
+
+    self.toError = function () {
+      return new ErrorResponse('validation', {
+        responseText: JSON.stringify({
+          status: 'error',
+          message: 'validation error',
+          data: self.errors,
+        })
+      })
+    }
+
+    self.hasErrors = () => Object.keys(self.errors)
+      .reduce((has, errorName) => has || self.errors[errorName].length > 0, false)
+  },
+
+  with: (fields = {}) => {
+    return {
+      validate: (rules = {}) => {
+        return new Promise((resolve, reject) => {
+          const errors = new Validator.errorrer()
+
+          Object.keys(rules)
+            .map((ruleName) => {
+              const name = ruleName
+              const value = fields[ruleName]
+              const ruleArr = rules[ruleName]
+
+              errors.add(name)
+
+              ruleArr.map((rule) => {
+                const ruleFn = Validator.rules[rule]
+                const errorMessage = ruleFn(value)
+
+                if (errorMessage) errors.setError(name, errorMessage)
+              })
+            })
+
+          errors.hasErrors()
+            ? reject(errors.toError())
+            : resolve({})
+        })
+      }
+    }
+  }
+})
+
 const API = {}
 
-API.listPosts = () => l.get(['posts'], [])
+API.login = ({ username, password }) =>
+  Validator.with({ username, password }).validate({
+    username: ['required'],
+    password: ['required'],
+  })
+    .then(() => Ajax.post(['account', 'login'], { username, password }))
 
-API.savePost = (post) => l.add(['posts'], post)
+API.listProjects = ({ }) =>
+  Ajax.post(['projects'])
+
