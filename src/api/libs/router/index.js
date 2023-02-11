@@ -5,6 +5,7 @@ class Doer {
 
   do(f = (() => { })) {
     this.func = f
+    return this
   }
 
   doing(req, res) {
