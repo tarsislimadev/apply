@@ -2,7 +2,7 @@ const path = require('path')
 
 const { info } = require('../logger')
 
-const { mkdirSync, writeFileSync } = require('../fs')
+const { mkdirSync, writeFileSync, readdirSync, readFileSync } = require('../fs')
 
 const { v4: uuid } = require('../uuid')
 
@@ -23,12 +23,16 @@ class DatabaseObject {
     mkdirSync(this.dirname)
   }
 
+  getPath() {
+    info('libs/db/DatabaseObject.getPath', {})
+
+    return path.resolve(this.dirname, this.id)
+  }
+
   write(name, value = null) {
     info('libs/db/DatabaseObject.write', { name, value })
 
-    const filename = path.resolve(this.dirname, name)
-
-    writeFileSync(filename, value)
+    writeFileSync(path.resolve(this.dirname, name), value)
 
     return this
   }
@@ -43,6 +47,39 @@ class DatabaseObject {
       .map((prop) => self.write(prop.toString(), props[prop].toString()))
 
     return this
+  }
+
+  read(name, def = null) {
+    info('libs/db/DatabaseObject.read', { name, def })
+
+    return readFileSync(path.resolve(this.getPath(), name))
+  }
+
+  readString(name, def = nul) {
+    info('libs/db/DatabaseObject.readString', { name, def })
+
+    return this.read(name, def).toString()
+  }
+
+  listProps() {
+    info('libs/db/DatabaseObject.listProps', {})
+
+    return readdirSync(this.getPath())
+  }
+
+  toJSON() {
+    info('libs/db/DatabaseObject.toJSON', {})
+
+    const self = this
+
+    const props = this.listProps()
+
+    return props
+      .reduce((obj, propName) => {
+        obj[propName] = self.readString(propName) // props[propName]
+
+        return obj
+      }, {})
   }
 }
 
