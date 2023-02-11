@@ -13,7 +13,7 @@
 
   <script src="/js/nElement.js"></script>
   <script src="/js/api.js"></script>
-  <script src="/js/flow.js"></script>
+  
   <script>
     const app = nElement.fromId('app')
 
@@ -23,6 +23,16 @@
 
     const errorMessage = new nError()
     app.append(errorMessage)
+
+    const addProjectButton = new nLink()
+    addProjectButton.setText('add project')
+    addProjectButton.href('/projects/create/')
+    app.append(addProjectButton)
+
+    const importProjectButton = new nLink()
+    importProjectButton.setText('import project')
+    importProjectButton.href('/projects/import/')
+    app.append(importProjectButton)
 
     const projectList = new nElement()
     app.append(projectList)

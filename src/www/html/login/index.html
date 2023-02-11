@@ -13,7 +13,7 @@
 
   <script src="/js/nElement.js"></script>
   <script src="/js/api.js"></script>
-  <script src="/js/flow.js"></script>
+
   <script>
     const app = nElement.fromId('app')
 
@@ -40,14 +40,15 @@
       const username = usernameInput.input.getValue()
       const password = passwordInput.input.getValue()
 
-      usernameInput.error.clear() 
-      passwordInput.error.clear() 
+      usernameInput.error.clear()
+      passwordInput.error.clear()
 
       API.login({ username, password })
-        .then((res) => Flow.goTo('/dashboard/'))
+        .then((res) => {
+          Flow.local.set('login', res.get('token'))
+          Flow.goTo('/dashboard/')
+        })
         .catch((err) => {
-          console.error(err)
-
           if (err.type == 'validation') {
             usernameInput.error.setText(err.get('username'))
             passwordInput.error.setText(err.get('password'))

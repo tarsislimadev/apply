@@ -27,11 +27,7 @@
     app.append(project)
 
     Flow.local.get('/project/')
-      .then((res) => {
-        const id = res.get('id')
-
-        console.log({ id })
-      })
+      // .then((res) => {})
       .catch((err) => errorMessage.setText(err.getMessage()))
 
   </script>

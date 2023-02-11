@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Apply</title>
+</head>
+
+<body>
+  <div id="app"></div>
+
+  <script src="/js/nElement.js"></script>
+  <script src="/js/api.js"></script>
+  <script>
+    const app = nElement.fromId('app')
+
+    const title = new nH1()
+    title.setText('Apply')
+    app.append(title)
+
+    const errorMessage = new nError()
+    app.append(errorMessage)
+
+    const projectName = new nInputTextGroup()
+    projectName.label.setText('Name')
+    projectName.input.placeholder('project')
+    app.append(projectName)
+
+    const projectLang = new nElement()
+    app.append(projectLang)
+
+    const selectedLang = new nElement()
+    projectLang.append(selectedLang)
+
+    const addLangButton = ({ tags, text }) => {
+      const langButton = new nButton()
+      langButton.setText(text)
+      langButton.on('click', () => {
+        selectedLang.setData('lang', tags.join('-'))
+        selectedLang.setText(text)
+      })
+      projectLang.append(langButton)
+    }
+
+    [
+      { tags: ['node', 'lts'], text: 'Node.js LTS' },
+      { tags: ['node', '18'], text: 'Node.js v18' },
+      { tags: ['python', '3.10'], text: 'Python v3.10' },
+      { tags: ['python', '3.8'], text: 'Python v3.8' },
+    ].map((lang) => addLangButton(lang))
+
+    const projectGitRepo = new nElement()
+    app.append(projectGitRepo)
+
+    const selectedGit = new nElement()
+    app.append(selectedGit)
+
+    const addGitRepoButton = ({ tags, text }) => {
+      const gitRepoButton = new nButton()
+      gitRepoButton.setText(text)
+      gitRepoButton.on('click', () => {
+        selectedGit.setData('git', tags.join('-'))
+        selectedGit.setText(text)
+      })
+      projectGitRepo.append(gitRepoButton)
+    }
+
+    [
+      { tags: ['github'], text: 'GitHub' },
+      { tags: ['gitlab'], text: 'GitLab' },
+      { tags: ['bitbucket'], text: 'BitBucket' },
+      { tags: ['own'], text: 'Own Repository' },
+    ].map((git) => addGitRepoButton(git))
+
+    const saveButton = new nButton()
+    saveButton.setText('save')
+    saveButton.on('click', () => {
+      const name = projectName.input.getValue()
+      const lang = selectedLang.getData('lang')
+      const git = selectedGit.getData('git')
+
+      API.saveProject({ name, lang, git })
+        .then((res) => Flow.goTo('/dashboard/'))
+        .catch((err) => {
+          if (err.type == 'validation') {
+
+          } else {
+            errorMessage.setText(err.getMessage())
+          }
+        })
+    })
+    app.append(saveButton)
+
+  </script>
+</body>
+
+</html>
