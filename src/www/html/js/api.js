@@ -19,6 +19,11 @@ class Response {
   getStatus() {
     return this.status
   }
+
+  toString() {
+    const { status, message, data } = this
+    return JSON.stringify({ status, message, data })
+  }
 }
 
 class SuccessResponse extends Response {
@@ -58,7 +63,7 @@ const Local = function (id = '') {
     return new Promise((resolve) => {
       try {
         const data = JSON.parse(localStorage.getItem(self.named(paths)))
-        const responseText =  JSON.stringify({ status: 'ok', message: null, data })
+        const responseText = JSON.stringify({ status: 'ok', message: null, data })
 
         resolve(new SuccessResponse({ responseText }))
       } catch (e) {
@@ -72,7 +77,9 @@ const Local = function (id = '') {
     return new Promise((resolve, reject) => {
       try {
         localStorage.setItem(self.named(paths), JSON.stringify(data))
-        resolve(new SuccessResponse({}))
+        const responseText = JSON.stringify({ status: 'ok', message: null, data: {} })
+
+        resolve(new SuccessResponse({ responseText }))
       } catch (e) {
         reject(e)
       }
@@ -91,22 +98,14 @@ const Local = function (id = '') {
 }
 
 class Flow {
-  static local() {
-    return new Local('flow')
-  }
-
-  static localSet(name, value = '') {
-    return Flow.local().set(name, value)
-  }
-
-  static localGet(name, def) {
-    return Flow.local().get(name, def)
-  }
+  static local = new Local('flow')
 
   static goTo(name, value = {}) {
-    Flow.localSet(name, value)
+    Flow.local.set(name, value)
 
-      (window.location = name)
+      ;;
+
+    (window.location = name)
   }
 }
 
@@ -123,7 +122,7 @@ const Ajax = {
     return new Promise((resolve, reject) => {
       const xhr = new XMLHttpRequest()
       xhr.open('POST', [Ajax.BASE_URL, ...paths].join('/'), true)
-
+      xhr.setRequestHeader('Content-Type', 'application/json')
 
       const onComplete = (xhr) => (xhr.status == '200')
         ? resolve(new SuccessResponse(xhr))
@@ -218,8 +217,9 @@ API.login = ({ username, password }) =>
     username: ['required'],
     password: ['required'],
   })
-    .then(() => Ajax.post(['account', 'login'], { username, password }))
+    .then(() => Ajax.post(['accounts', 'login'], { username, password }))
 
-API.listProjects = ({ }) =>
-  Ajax.post(['projects'])
+API.listProjects = ({ }) => Ajax.post(['projects'])
+
+API.saveProject = ({ name, lang, git }) => Ajax.post(['projects', 'save'], { name, lang, git })
 
