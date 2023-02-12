@@ -88,7 +88,7 @@ class Request {
     info('libs/http/request/Request.parseBody', { chunk })
 
     const lines = this.splitLines({ chunk })
-    return JSON.parse(lines[lines.length - 1])
+    return JSON.parse(lines[lines.length - 1] || '{}')
   }
 }
 

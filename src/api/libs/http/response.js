@@ -76,10 +76,16 @@ class Response {
     return (`HTTP/1.1 ${status} ${statusMessage}`)
   }
 
+  parseHeader(key, value) {
+    info('src/api/libs/http/response.js:Response.parseHeader', { key, value })
+
+    return [key, value].join(': ')
+  }
+
   getContentTypeLine() {
     info('src/api/libs/http/response.js:Response.getContentTypeLine', {})
 
-    return 'Content-Type: application/json'
+    return this.parseHeader('Content-Type', 'application/json')
   }
 
   toString() {
