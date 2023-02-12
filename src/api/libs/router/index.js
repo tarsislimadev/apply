@@ -4,11 +4,15 @@ class Doer {
   func = null
 
   do(f = (() => { })) {
+    info('Doer.do', { f })
+
     this.func = f
     return this
   }
 
   doing(req, res) {
+    info('Doer.doing', { req, res })
+
     return this.func(req, res)
   }
 }
