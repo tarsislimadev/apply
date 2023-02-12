@@ -86,14 +86,23 @@ const Local = function (id = '') {
     })
   }
 
-  self.add = async function (paths = [], data = {}) {
-    const res = await this.get(paths)
+  self.add = function (paths = [], data = {}) {
+    const self = this
 
-    const list = res.get('list', [])
+    return new Promise((resolve, reject) => {
+      self.get(paths)
+        .then((res) => {
+          const list = res.get('list', [])
+  
+          list.push(data)
+      
+          self.set(paths, { list })
 
-    list.push(data)
-
-    return this.set(paths, { list })
+          const responseText = JSON.stringify({ status: 'ok', message: null, data: {} })
+          resolve(new SuccessResponse({ responseText }))
+        })
+        .catch((err) => reject(err))
+    })
   }
 }
 
