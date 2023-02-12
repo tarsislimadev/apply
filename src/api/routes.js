@@ -16,7 +16,7 @@ router.use('api/v1/accounts/login').do(({ query }, res) => {
   return res.setJSON({ token: login.id })
 })
 
-router.use('api/v1/projects').do(async (req, res) => {
+router.use('api/v1/projects').do((req, res) => {
   info('routes/projects', { req, res })
 
   const list = db.in('projects').listJSON()
@@ -24,7 +24,7 @@ router.use('api/v1/projects').do(async (req, res) => {
   return res.setJSON({ list })
 })
 
-router.use('api/v1/projects/save').do(async (req, res) => {
+router.use('api/v1/projects/save').do((req, res) => {
   info('routes/projects/save', { req, res })
 
   const project = db.in('projects').new()
