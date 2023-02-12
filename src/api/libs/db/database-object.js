@@ -26,7 +26,7 @@ class DatabaseObject {
   getPath() {
     info('libs/db/DatabaseObject.getPath', {})
 
-    return path.resolve(this.dirname, this.id)
+    return this.dirname
   }
 
   write(name, value = null) {
@@ -55,7 +55,7 @@ class DatabaseObject {
     return readFileSync(path.resolve(this.getPath(), name))
   }
 
-  readString(name, def = nul) {
+  readString(name, def = null) {
     info('libs/db/DatabaseObject.readString', { name, def })
 
     return this.read(name, def).toString()
@@ -76,7 +76,7 @@ class DatabaseObject {
 
     return props
       .reduce((obj, propName) => {
-        obj[propName] = self.readString(propName) // props[propName]
+        obj[propName] = self.readString(propName)
 
         return obj
       }, {})

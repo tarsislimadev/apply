@@ -16,10 +16,10 @@ class Database {
     return fs.mkdirSync(this.dirname)
   }
 
-  list(dirname = '') {
-    logger.info('libs/db/database/Database.list', { dirname })
+  list() {
+    logger.info('libs/db/database/Database.list', { })
 
-    return fs.readdirSync(path.resolve(this.dirname, dirname)) || []
+    return fs.readdirSync(this.dirname)
   }
 
   new() {
@@ -34,23 +34,13 @@ class Database {
     return new Database(path.resolve(this.dirname, dirname))
   }
 
-  findById(dirname = '') {
-    logger.info('libs/db/database/Database.findById', { dirname })
-
-    const id = this.list().find((obj) => obj === dirname)
-
-    if (!id) return null
-
-    return new DatabaseObject(path.resolve(this.dirname, dirname), id)
-  }
-
   listJSON() {
     logger.info('libs/db/database/Database.listJSON', {})
 
     const self = this
 
     return this.list()
-      .map((dirname) => new DatabaseObject(self.dirname, dirname))
+      .map((id) => new DatabaseObject(self.dirname, id))
       .map((obj) => obj.toJSON())
   }
 }
