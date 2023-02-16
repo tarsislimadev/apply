@@ -20,6 +20,18 @@
     title.setText('Apply')
     app.append(title)
 
+    const projTitle = new nH2()
+    projTitle.setText('...')
+    app.append(projTitle)
+
+    const projGit = new nElement()
+    projGit.setText('...')
+    app.append(projGit)
+
+    const projLang = new nElement()
+    projLang.setText('...')
+    app.append(projLang)
+
     const errorMessage = new nError()
     app.append(errorMessage)
 
@@ -28,9 +40,10 @@
 
     Flow.local.get('/project/')
       .then((res) => {
-        const id = res.get('id')
-
-        console.log({ id })
+        const data = res.getData()
+        projTitle.setText(data.name)
+        projGit.setText(data.git)
+        projLang.setText(data.lang)
       })
       .catch((err) => errorMessage.setText(err.getMessage()))
 
