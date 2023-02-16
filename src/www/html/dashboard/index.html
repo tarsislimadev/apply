@@ -13,7 +13,7 @@
 
   <script src="/js/nElement.js"></script>
   <script src="/js/api.js"></script>
-  
+
   <script>
     const app = nElement.fromId('app')
 
@@ -38,24 +38,23 @@
     app.append(projectList)
 
     API.listProjects({})
-      .then((res) => {
-        res.get('list', [])
-          .map((proj) => {
-            const projEl = new nElement()
-            projEl.setStyle('margin-bottom', '1rem')
+      .then((res) => res.get('list', [])
+        .map((proj, id) => {
+          const projEl = new nElement()
+          projEl.setStyle('margin-bottom', '1rem')
 
-            const nameEl = new nText()
-            nameEl.setText(proj.name)
-            projEl.append(nameEl)
+          const nameEl = new nText()
+          nameEl.setText(proj.name)
+          projEl.append(nameEl)
 
-            const projLink = new nButton()
-            projLink.setText('Go to the project')
-            projLink.on('click', () => Flow.goTo('/project/', proj))
-            projEl.append(projLink)
+          const projLink = new nButton()
+          projLink.setText('Go to the project')
+          projLink.on('click', () => Flow.goTo('/project/', { id, ...proj }))
+          projEl.append(projLink)
 
-            projectList.append(projEl)
-          })
-      })
+          projectList.append(projEl)
+        })
+      )
       .catch((err) => errorMessage.setText(err.message))
 
   </script>
