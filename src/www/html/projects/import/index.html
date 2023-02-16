@@ -23,12 +23,57 @@
     const errorMessage = new nError()
     app.append(errorMessage)
 
-    const project = new nElement()
-    app.append(project)
+    const projectName = new nElement()
+    projectName.setText('...')
+    app.append(projectName)
 
-    Flow.local.get('/project/')
-      // .then((res) => {})
-      .catch((err) => errorMessage.setText(err.getMessage()))
+    const projectLang = new nElement()
+    app.append(projectLang)
+
+    const selectedLang = new nElement()
+    projectLang.append(selectedLang)
+
+    const projectGitRepo = new nElement()
+    app.append(projectGitRepo)
+
+    const selectedGit = new nElement()
+    app.append(selectedGit)
+
+    const addGitRepoButton = ({ tags, text }) => {
+      const gitRepoButton = new nButton()
+      gitRepoButton.setText(text)
+      gitRepoButton.on('click', () => {
+        selectedGit.setData('git', tags.join('-'))
+        selectedGit.setText(text)
+      })
+      projectGitRepo.append(gitRepoButton)
+    }
+
+    [
+      { tags: ['github'], text: 'GitHub' },
+      { tags: ['gitlab'], text: 'GitLab' },
+      { tags: ['bitbucket'], text: 'BitBucket' },
+      { tags: ['own'], text: 'Own Repository' },
+    ].map((git) => addGitRepoButton(git))
+
+    const saveButton = new nButton()
+    saveButton.setText('save')
+    saveButton.on('click', () => {
+      const name = projectName.input.getValue()
+      const lang = selectedLang.getData('lang')
+      const git = selectedGit.getData('git')
+
+      API.saveProject({ name, lang, git })
+        .then((res) => Flow.goTo('/dashboard/'))
+        .catch((err) => {
+          if (err.type == 'validation') {
+            // 
+          } else {
+            errorMessage.setText(err.getMessage())
+          }
+        })
+    })
+    app.append(saveButton)
 
   </script>
 </body>
