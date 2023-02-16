@@ -152,6 +152,17 @@ class nH1 extends nElement {
   }
 }
 
+class nH2 extends nElement {
+  constructor() {
+    super({
+      component: { name: 'h2' },
+    })
+
+    this.setStyle('font-weight', 'bold')
+    this.setStyle('font-size', '3rem')
+  }
+}
+
 class nText extends nElement {
   constructor() {
     super({
@@ -454,5 +465,19 @@ class nInputTextGroup extends nElement {
     this.append(this.input)
 
     this.append(this.error)
+  }
+}
+
+class nHR extends nElement {
+  constructor() {
+    super({
+      element: { tagName: 'hr' },
+      component: { name: 'hr' },
+    })
+
+    this.build()
+  }
+
+  build() {
   }
 }
