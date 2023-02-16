@@ -24,6 +24,19 @@
     const errorMessage = new nError()
     app.append(errorMessage)
 
+    const createLoginButton = (title, sso = '') => (new nButton())
+      .setText(title)
+      .on('click', () => Flow.goTo('/dashboard/'))
+
+    const githubButton = createLoginButton('GitHub')
+    app.append(githubButton)
+
+    const gitlabButton = createLoginButton('GitLab')
+    app.append(gitlabButton)
+
+    const bitbucketButton = createLoginButton('BitBucket')
+    app.append(bitbucketButton)
+
     const usernameInput = new nInputTextGroup()
     usernameInput.label.setText('User')
     usernameInput.input.placeholder('username')
