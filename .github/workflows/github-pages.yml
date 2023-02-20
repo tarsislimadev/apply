@@ -15,12 +15,23 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v3
+        with:
+          path: main
+
+      - name: Checkout private tools
+        uses: actions/checkout@v3
+        with:
+          repository: brtmvdl/brtmvdl.github.io
+          token: ${{ secrets.GH_PAT }} # `GH_PAT` is a secret that contains your PAT
+          path: github.io
 
       - name: Git push
         run: |
+          cd github.io
           date > generated.txt
           git config user.name github-actions
           git config user.email github-actions@github.com
-          git add .
-          git commit -m "generated"
+          git add -A 
+          git commit -m "${{ github.repository }}-$( date +%Y%m%d%H%M%S )"
           git push
+
