@@ -18,6 +18,12 @@ jobs:
 
       - name: Docker build
         run: |
+          echo git config --global user.email "${{ github.repository_owner }}@github.com"
+          git config --global user.email "${{ github.repository_owner }}@github.com"
+
+          echo git config --global user.name "${{ github.repository_owner }}"
+          git config --global user.name "${{ github.repository_owner }}"
+
           echo gh repo clone brtmvdl/brtmvdl.github.io "${GH_PATH}"
           gh repo clone brtmvdl/brtmvdl.github.io "${GH_PATH}"
 
