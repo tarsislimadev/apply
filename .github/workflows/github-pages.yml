@@ -39,8 +39,8 @@ jobs:
           echo git commit -m "${PROJECT}-$( date +%Y%m%d%H%M%S )"
           git commit -m "${PROJECT}-$( date +%Y%m%d%H%M%S )"
 
-          echo gh repo sync
-          gh repo sync
+          echo gh repo sync --force
+          gh repo sync --force
         env:
           PROJECT: apply
           GH_PATH: ./brtmvdl
