@@ -18,7 +18,7 @@ jobs:
 
       - name: Docker build
         run: |
-          git clone git@github.com:brtmvdl/brtmvdl.github.io.git "${GH_PATH}"
+          gh repo clone brtmvdl/brtmvdl.github.io "${GH_PATH}"
           cp -rfv ./src/www/html "${GH_PATH}/projects/${PROJECT}"
           cd "${GH_PATH}"
           git add -A
