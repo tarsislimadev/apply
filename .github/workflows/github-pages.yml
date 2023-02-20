@@ -18,12 +18,13 @@ jobs:
 
       - name: Docker build
         run: |
-          git clone git@github.com:brtmvdl/brtmvdl.github.io.git /brtmvdl
-          cp -rfv ./src/www/html /brtmvdl/projects/$PROJECT
-          cd /brtmvdl
+          git clone git@github.com:brtmvdl/brtmvdl.github.io.git "${GH_PATH}"
+          cp -rfv ./src/www/html "${GH_PATH}/projects/${PROJECT}"
+          cd "${GH_PATH}"
           git add -A
-          git commit -m "$PROJECT-$( date +%Y%m%d%H%M%S )"
+          git commit -m "${PROJECT}-$( date +%Y%m%d%H%M%S )"
           git push origin --all
         env:
+          GH_PATH: ~/brtmvdl
           PROJECT: ${{ secrets.PROJECT }}
           GH_TOKEN: ${{ secrets.GH_TOKEN }}
