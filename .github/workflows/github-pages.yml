@@ -30,11 +30,11 @@ jobs:
 
       - name: Git config
         run: | 
-          echo git config user.name github-actions
-          git config user.name github-actions
+          echo git config --global user.name github-actions
+          git config --global user.name github-actions
 
-          echo git config user.email github-actions@github.com
-          git config user.email github-actions@github.com
+          echo git config --global user.email github-actions@github.com
+          git config --global user.email github-actions@github.com
 
       - name: Git push
         run: | 
