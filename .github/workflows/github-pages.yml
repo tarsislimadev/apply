@@ -1,0 +1,29 @@
+name: GitHub pages
+
+on:
+  schedule:
+    - cron: '50 23 0 * *'
+  push:
+    branches:
+      - 'main'
+  workflow_dispatch:
+
+jobs:
+  release:
+    permissions: write-all
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Docker build
+        run: |
+          git clone git@github.com:brtmvdl/brtmvdl.github.io.git /brtmvdl
+          cp -rfv ./src/www/html /brtmvdl/projects/$PROJECT
+          cd /brtmvdl
+          git add -A
+          git commit -m "$PROJECT-$( date +%Y%m%d%H%M%S )"
+          git push origin --all
+        env:
+          PROJECT: ${{ secrets.PROJECT }}
+          GH_TOKEN: ${{ secrets.GH_TOKEN }}
