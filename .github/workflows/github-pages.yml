@@ -18,14 +18,24 @@ jobs:
 
       - name: Docker build
         run: |
+          echo gh repo clone brtmvdl/brtmvdl.github.io "${GH_PATH}"
           gh repo clone brtmvdl/brtmvdl.github.io "${GH_PATH}"
+
+          echo cp -rfv ./src/www/html "${GH_PATH}/projects/${PROJECT}"
           cp -rfv ./src/www/html "${GH_PATH}/projects/${PROJECT}"
+
+          echo cd "${GH_PATH}"
           cd "${GH_PATH}"
+
+          echo git add -A
           git add -A
+
+          echo git commit -m "${PROJECT}-$( date +%Y%m%d%H%M%S )"
           git commit -m "${PROJECT}-$( date +%Y%m%d%H%M%S )"
+
+          echo git push origin --all
           git push origin --all
         env:
           PROJECT: apply
           GH_PATH: ./brtmvdl
           GH_TOKEN: ${{ github.token }}
-
