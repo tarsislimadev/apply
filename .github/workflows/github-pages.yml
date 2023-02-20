@@ -24,7 +24,7 @@ jobs:
 
       - name: Checkout this project
         uses: actions/checkout@v3
-          path: ${{ github.repository }}
+          path: ./project
 
       - run: |
           echo git config user.name github-actions
@@ -33,8 +33,8 @@ jobs:
           echo git config user.email github-actions@github.com
           git config user.email github-actions@github.com
 
-          echo cp ${{ github.repository }}/src/www/html ./projects/${{ github.repository }}
-          cp ${{ github.repository }}/src/www/html ./projects/${{ github.repository }}
+          echo cp ./project/src/www/html ./projects/${{ github.repository }}
+          cp ./project/src/www/html ./projects/${{ github.repository }}
 
           echo git add -A
           git add -A
