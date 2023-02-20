@@ -41,6 +41,9 @@ jobs:
 
       - name: Git push
         run: | 
+          echo cd brtmvdl
+          cd brtmvdl
+
           echo git add -A
           git add -A
 
@@ -49,5 +52,3 @@ jobs:
 
           echo git push
           git push
-        with:
-          path: brtmvdl
