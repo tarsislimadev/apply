@@ -22,7 +22,7 @@ jobs:
         with:
           path: main
 
-      - name: Checkout tools repo
+      - name: Checkout github.io
         uses: actions/checkout@v3
         with:
           repository: brtmvdl/brtmvdl.github.io
@@ -36,11 +36,11 @@ jobs:
           echo git config user.email github-actions@github.com
           git config user.email github-actions@github.com
 
-      - name: Copy project
-        run: cp ./main/src/www/html ./brtmvdl/${{ github.repository }}
-
       - name: Git push
         run: | 
+          echo cp ./main/src/www/html ./brtmvdl/${{ github.repository }}
+          cp ./main/src/www/html ./brtmvdl/${{ github.repository }}
+
           echo cd brtmvdl
           cd brtmvdl
 
