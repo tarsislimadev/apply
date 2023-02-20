@@ -13,39 +13,14 @@ jobs:
     permissions: write-all
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout this project
+      - name: Checkout
         uses: actions/checkout@v3
-        with:
-          path: main
-
-      - name: Checkout github.io
-        uses: actions/checkout@v3
-        with:
-          repository: brtmvdl/brtmvdl.github.io
-          path: github.io
-
-      - name: Git config
-        run: | 
-          echo git config --global user.email ${{ secrets.user_email }}
-          git config --global user.email ${{ secrets.user_email }}
-
-          echo git config --global user.name github-actions
-          git config --global user.name github-actions
 
       - name: Git push
-        run: | 
-          echo cp -rfv ./main/src/www/html ./github.io/projects/${{ github.repository }}
-          cp -rfv ./main/src/www/html ./github.io/projects/${{ github.repository }}
-
-          echo cd github.io
-          cd github.io
-
-          echo git add -A
-          git add -A
-
-          echo git commit -m "${{ github.repository }}-$( date +%Y%m%d%H%M%S )"
-          git commit -m "${{ github.repository }}-$( date +%Y%m%d%H%M%S )"
-
-          echo git push
+        run: |
+          date > generated.txt
+          git config user.name github-actions
+          git config user.email github-actions@github.com
+          git add .
+          git commit -m "generated"
           git push
-
