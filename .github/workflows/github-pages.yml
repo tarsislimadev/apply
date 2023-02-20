@@ -16,7 +16,12 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v3
 
-      - name: Docker build
+      - name: Remove git files
+        run: |
+          echo rm -rf .git
+          rm -rf .git
+
+      - name: Publish project
         run: |
           echo git config --global user.email "${{ github.repository_owner }}@github.com"
           git config --global user.email "${{ github.repository_owner }}@github.com"
