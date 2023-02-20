@@ -12,10 +12,6 @@ jobs:
   release:
     permissions: write-all
     runs-on: ubuntu-latest
-    env:
-      PROJECT: apply
-      GH_PATH: ./brtmvdl
-      GH_TOKEN: ${{ github.token }}
     steps:
       - name: Checkout this project
         uses: actions/checkout@v3
@@ -30,11 +26,11 @@ jobs:
 
       - name: Git config
         run: | 
-          echo git config --global user.email "github-actions[bot]@users.noreply.github.com"
-          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          echo git config --global user.email ${{ secrets.user_email }}
+          git config --global user.email ${{ secrets.user_email }}
 
-          echo git config --global user.name "github-actions[bot]"
-          git config --global user.name "github-actions[bot]"
+          echo git config --global user.name github-actions
+          git config --global user.name github-actions
 
       - name: Git push
         run: | 
@@ -50,12 +46,6 @@ jobs:
           echo git commit -m "${{ github.repository }}-$( date +%Y%m%d%H%M%S )"
           git commit -m "${{ github.repository }}-$( date +%Y%m%d%H%M%S )"
 
-          # echo git push
-          # git push
-
-      - name: Push changes
-        uses: ad-m/github-push-action@master
-        with:
-          repository: brtmvdl/brtmvdl.github.io
-          directory: github.io
+          echo git push
+          git push
 
