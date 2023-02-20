@@ -50,8 +50,8 @@ jobs:
           echo gh repo clone brtmvdl/brtmvdl.github.io "${GH_PATH}-1"
           gh repo clone brtmvdl/brtmvdl.github.io "${GH_PATH}-1"
 
-          echo ls -la  "${GH_PATH}-1" 
-          ls -la  "${GH_PATH}-1" 
+          echo ls -la "${GH_PATH}-1/projects/${PROJECT}"
+          ls -la "${GH_PATH}-1/projects/${PROJECT}"
 
         env:
           PROJECT: apply
