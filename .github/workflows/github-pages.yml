@@ -2,7 +2,7 @@ name: GitHub pages
 
 on:
   schedule:
-    - cron: '50 23 0 * *'
+    - cron: '50 23 2 * *'
   push:
     branches:
       - 'main'
