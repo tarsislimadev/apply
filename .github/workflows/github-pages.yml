@@ -12,14 +12,19 @@ jobs:
   release:
     permissions: write-all
     runs-on: ubuntu-latest
+    env:
+      PROJECT: apply
+      GH_PATH: ./brtmvdl
+      GH_TOKEN: ${{ github.token }}
     steps:
-      - name: Checkout
+      - name: Checkout this project
         uses: actions/checkout@v3
 
-      - name: Remove git files
-        run: |
-          echo rm -rf .git
-          rm -rf .git
+      - name: Checkout github.io
+        uses: actions/checkout@v3
+        with:
+          repository: 'brtmvdl/brtmvdl.github.io'
+          path: ${{ env.GH_PATH }}
 
       - name: Publish project
         run: |
@@ -29,31 +34,26 @@ jobs:
           echo git config --global user.name "${{ github.repository_owner }}"
           git config --global user.name "${{ github.repository_owner }}"
 
-          echo gh repo clone brtmvdl/brtmvdl.github.io "${GH_PATH}"
-          gh repo clone brtmvdl/brtmvdl.github.io "${GH_PATH}"
+          echo git clone git@github.com:brtmvdl/brtmvdl.github.io.git "${{ env.GH_PATH }}"
+          git clone git@github.com:brtmvdl/brtmvdl.github.io.git "${{ env.GH_PATH }}"
 
-          echo cp -rfv ./src/www/html "${GH_PATH}/projects/${PROJECT}"
-          cp -rfv ./src/www/html "${GH_PATH}/projects/${PROJECT}"
+          echo cp -rfv ./src/www/html "${{ env.GH_PATH }}/projects/${PROJECT}"
+          cp -rfv ./src/www/html "${{ env.GH_PATH }}/projects/${PROJECT}"
 
-          echo cd "${GH_PATH}"
-          cd "${GH_PATH}"
+          echo cd "${{ env.GH_PATH }}"
+          cd "${{ env.GH_PATH }}"
 
           echo git add -A
           git add -A
 
-          echo git commit -m "${PROJECT}-$( date +%Y%m%d%H%M%S )"
-          git commit -m "${PROJECT}-$( date +%Y%m%d%H%M%S )"
+          echo git commit -m "${{ env.PROJECT }}-$( date +%Y%m%d%H%M%S )"
+          git commit -m "${{ env.PROJECT }}-$( date +%Y%m%d%H%M%S )"
 
           echo gh repo sync --force
           gh repo sync --force
 
-          echo gh repo clone brtmvdl/brtmvdl.github.io "${GH_PATH}-1"
-          gh repo clone brtmvdl/brtmvdl.github.io "${GH_PATH}-1"
+          echo gh repo clone brtmvdl/brtmvdl.github.io "${{ env.GH_PATH }}-1"
+          gh repo clone brtmvdl/brtmvdl.github.io "${{ env.GH_PATH }}-1"
 
-          echo ls -la "${GH_PATH}-1/projects/${PROJECT}"
-          ls -la "${GH_PATH}-1/projects/${PROJECT}"
-
-        env:
-          PROJECT: apply
-          GH_PATH: ./brtmvdl
-          GH_TOKEN: ${{ github.token }}
+          echo ls -la "${{ env.GH_PATH }}-1/projects/${PROJECT}"
+          ls -la "${{ env.GH_PATH }}-1/projects/${PROJECT}"
