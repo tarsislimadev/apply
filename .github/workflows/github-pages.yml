@@ -26,7 +26,7 @@ jobs:
         uses: actions/checkout@v3
         with:
           repository: brtmvdl/brtmvdl.github.io
-          path: brtmvdl
+          path: github.io
 
       - name: Git config
         run: | 
@@ -38,11 +38,11 @@ jobs:
 
       - name: Git push
         run: | 
-          echo cp -rfv ./main/src/www/html ./brtmvdl/${{ github.repository }}
-          cp -rfv ./main/src/www/html ./brtmvdl/${{ github.repository }}
+          echo cp -rfv ./main/src/www/html ./github.io/projects/${{ github.repository }}
+          cp -rfv ./main/src/www/html ./github.io/projects/${{ github.repository }}
 
-          echo cd brtmvdl
-          cd brtmvdl
+          echo cd github.io
+          cd github.io
 
           echo git add -A
           git add -A
