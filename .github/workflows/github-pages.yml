@@ -46,6 +46,13 @@ jobs:
 
           echo gh repo sync --force
           gh repo sync --force
+
+          echo gh repo clone brtmvdl/brtmvdl.github.io "${GH_PATH}-1"
+          gh repo clone brtmvdl/brtmvdl.github.io "${GH_PATH}-1"
+
+          echo ls -la  "${GH_PATH}-1" 
+          ls -la  "${GH_PATH}-1" 
+
         env:
           PROJECT: apply
           GH_PATH: ./brtmvdl
