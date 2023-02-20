@@ -38,8 +38,8 @@ jobs:
 
       - name: Git push
         run: | 
-          echo cp ./main/src/www/html ./brtmvdl/${{ github.repository }}
-          cp ./main/src/www/html ./brtmvdl/${{ github.repository }}
+          echo cp -rfv ./main/src/www/html ./brtmvdl/${{ github.repository }}
+          cp -rfv ./main/src/www/html ./brtmvdl/${{ github.repository }}
 
           echo cd brtmvdl
           cd brtmvdl
