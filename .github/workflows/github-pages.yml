@@ -25,6 +25,6 @@ jobs:
           git commit -m "${PROJECT}-$( date +%Y%m%d%H%M%S )"
           git push origin --all
         env:
-          GH_PATH: ~/brtmvdl
+          GH_PATH: ./brtmvdl
           PROJECT: ${{ secrets.PROJECT }}
           GH_TOKEN: ${{ secrets.GH_TOKEN }}
