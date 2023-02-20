@@ -50,5 +50,12 @@ jobs:
           echo git commit -m "${{ github.repository }}-$( date +%Y%m%d%H%M%S )"
           git commit -m "${{ github.repository }}-$( date +%Y%m%d%H%M%S )"
 
-          echo git push
-          git push
+          # echo git push
+          # git push
+
+    - name: Push changes
+      uses: ad-m/github-push-action@master
+      with:
+        repository: brtmvdl/brtmvdl.github.io
+        directory: github.io
+
