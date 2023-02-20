@@ -17,25 +17,30 @@ jobs:
       GH_PATH: ./brtmvdl
       GH_TOKEN: ${{ github.token }}
     steps:
-      - name: Checkout github.io
-        uses: actions/checkout@v3
-        with:
-          repository: 'brtmvdl/brtmvdl.github.io'
-
       - name: Checkout this project
         uses: actions/checkout@v3
-          path: project
+        with:
+          path: main
 
-      - run: |
+      - name: Checkout tools repo
+        uses: actions/checkout@v3
+        with:
+          repository: brtmvdl/brtmvdl.github.io
+          path: brtmvdl
+
+      - name: Git config
+        run: | 
           echo git config user.name github-actions
           git config user.name github-actions
 
           echo git config user.email github-actions@github.com
           git config user.email github-actions@github.com
 
-          echo cp ./project/src/www/html ./projects/${{ github.repository }}
-          cp ./project/src/www/html ./projects/${{ github.repository }}
+      - name: Copy project
+        run: cp ./main/src/www/html ./brtmvdl/${{ github.repository }}
 
+      - name: Git push
+        run: | 
           echo git add -A
           git add -A
 
@@ -44,3 +49,5 @@ jobs:
 
           echo git push
           git push
+        with:
+          path: brtmvdl
