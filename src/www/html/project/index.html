@@ -35,6 +35,11 @@
     const errorMessage = new nError()
     app.append(errorMessage)
 
+    const deployButton = new nButton()
+    deployButton.setText('Deploy')
+    deployButton.on('click', () => Flow.goTo('/project/deploy/', app.getData('app')))
+    app.append(deployButton)
+
     const project = new nElement()
     app.append(project)
 
@@ -44,6 +49,8 @@
         projTitle.setText(data.name)
         projGit.setText(data.git)
         projLang.setText(data.lang)
+
+        app.setData('app', data)
       })
       .catch((err) => errorMessage.setText(err.getMessage()))
 
