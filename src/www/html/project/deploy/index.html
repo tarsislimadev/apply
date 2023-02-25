@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Apply</title>
+</head>
+
+<body>
+  <div id="app"></div>
+
+  <script src="/js/nElement.js"></script>
+  <script src="/js/api.js"></script>
+  <script>
+    const app = nElement.fromId('app')
+
+    const title = new nH1()
+    title.setText('Apply')
+    app.append(title)
+
+    const projTitle = new nH2()
+    projTitle.setText('...')
+    app.append(projTitle)
+
+    const projGit = new nElement()
+    projGit.setText('...')
+    app.append(projGit)
+
+    const projLang = new nElement()
+    projLang.setText('...')
+    app.append(projLang)
+
+    const projPayment = new nSelectGroup()
+    projPayment.label.setText('Payment')
+    Array.from([
+      { key: 'pix', value: 'Pix' },
+      { key: 'paypal', value: 'PayPal' },
+    ])
+      .forEach(({ key, value }) => projPayment.select.add(key, value))
+    app.append(projPayment)
+
+    const deployButton = new nButton()
+    deployButton.setText('Deploy')
+    deployButton.on('click', () => {
+      API.projectsDeploy({})
+        .then((res) => console.log(res))
+        .catch((err) => errorMessage.setText(err.getMessage()))
+    })
+    app.append(deployButton)
+
+    const errorMessage = new nError()
+    app.append(errorMessage)
+
+    const project = new nElement()
+    app.append(project)
+
+    Flow.local.get('/project/')
+      .then((res) => {
+        const data = res.getData()
+        projTitle.setText(data.name)
+        projGit.setText(data.git)
+        projLang.setText(data.lang)
+      })
+      .catch((err) => errorMessage.setText(err.getMessage()))
+
+  </script>
+</body>
+
+</html>
