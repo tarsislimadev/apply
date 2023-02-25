@@ -112,12 +112,12 @@ class nElement {
   }
 
   setData(name, value) {
-    this.element.dataset[name] = value
+    this.element.dataset[name] = JSON.stringify(value)
     return this
   }
 
   getData(name) {
-    return this.element.dataset[name]
+    return JSON.parse(this.element.dataset[name])
   }
 
   clear() {
@@ -258,6 +258,24 @@ class nLabel extends nElement {
     this.setStyle('margin-bottom', '0.5rem')
     this.setStyle('padding-top', '0.5rem')
     this.setStyle('padding-botton', '0.5rem')
+  }
+}
+
+class nSelect extends nElement {
+  constructor() {
+    super({
+      element: { tagName: 'select' },
+      component: { name: 'select' },
+    })
+  }
+
+  add(name, value = '') {
+    const option = document.createElement('option')
+    option.value = name
+    option.text = value
+
+    this.element.append(option)
+    return this
   }
 }
 
@@ -463,6 +481,26 @@ class nInputTextGroup extends nElement {
 
     this.input.setAttr('id', id)
     this.append(this.input)
+
+    this.append(this.error)
+  }
+}
+
+class nSelectGroup extends nElement {
+  label = new nLabel
+  select = new nSelect
+  error = new nError
+
+  constructor() {
+    super({ component: { name: 'input-text-group' } })
+
+    const id = Date.now()
+
+    this.label.setAttr('for', id)
+    this.append(this.label)
+
+    this.select.setAttr('id', id)
+    this.append(this.select)
 
     this.append(this.error)
   }
