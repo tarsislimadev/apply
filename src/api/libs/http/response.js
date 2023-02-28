@@ -8,7 +8,7 @@ class Response {
   body = { status: 'ok', message: null, data: {} }
 
   setError(e = new ApplicationError()) {
-    error('src/api/libs/http/response.js:Response.setError', e)
+    error('src/api/libs/http/response:Response.setError', e)
 
     const { stack } = e
 
@@ -26,7 +26,7 @@ class Response {
   }
 
   setJSON(json = {}) {
-    info('src/api/libs/http/response.js:Response.setJSON', { json })
+    info('src/api/libs/http/response:Response.setJSON', { json })
 
     this.status = STATUS.OK
     this.body.status = 'OK'
@@ -37,7 +37,7 @@ class Response {
   }
 
   parseStatusMessage(status) {
-    info('src/api/libs/http/response.js:Response.parseStatusMessage', { status })
+    info('src/api/libs/http/response:Response.parseStatusMessage', { status })
 
     switch (status) {
       case 200: return 'OK'
@@ -50,25 +50,25 @@ class Response {
   }
 
   toJSON() {
-    info('src/api/libs/http/response.js:Response.toJSON', {})
+    info('src/api/libs/http/response:Response.toJSON', {})
 
     return this.body
   }
 
   getBodyString() {
-    info('src/api/libs/http/response.js:Response.getBodyString', {})
+    info('src/api/libs/http/response:Response.getBodyString', {})
 
     return JSON.stringify(this.toJSON(), null, 4)
   }
 
   parseContentLength(body = '') {
-    info('src/api/libs/http/response.js:Response.parseContentLength', { body })
+    info('src/api/libs/http/response:Response.parseContentLength', { body })
 
     return +Buffer.from([...body]).lenght
   }
 
   getFirstLine() {
-    info('src/api/libs/http/response.js:Response.getFirstLine', {})
+    info('src/api/libs/http/response:Response.getFirstLine', {})
 
     const { status } = this
     const statusMessage = this.parseStatusMessage(status)
@@ -77,19 +77,19 @@ class Response {
   }
 
   parseHeader(key, value) {
-    info('src/api/libs/http/response.js:Response.parseHeader', { key, value })
+    info('src/api/libs/http/response:Response.parseHeader', { key, value })
 
     return [key, value].join(': ')
   }
 
   getContentTypeLine() {
-    info('src/api/libs/http/response.js:Response.getContentTypeLine', {})
+    info('src/api/libs/http/response:Response.getContentTypeLine', {})
 
     return this.parseHeader('Content-Type', 'application/json')
   }
 
   toString() {
-    info('src/api/libs/http/response.js:Response.toString', {})
+    info('src/api/libs/http/response:Response.toString', {})
 
     const strArr = []
     strArr.push(this.getFirstLine())
