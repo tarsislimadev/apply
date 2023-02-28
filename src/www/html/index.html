@@ -31,6 +31,10 @@
     dashboardLink.setText('Dashboard')
     app.append(dashboardLink)
 
+    API.projectsList()
+    .then(res => console.log(res))
+    .catch(err => errorMessage.setText(err.message))
+
   </script>
 </body>
 

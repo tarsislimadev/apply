@@ -93,9 +93,63 @@ const Local = function (id = '') {
       self.get(paths)
         .then((res) => {
           const list = res.get('list', [])
-  
+
           list.push(data)
-      
+
+          self.set(paths, { list })
+
+          const responseText = JSON.stringify({ status: 'ok', message: null, data: {} })
+          resolve(new SuccessResponse({ responseText }))
+        })
+        .catch((err) => reject(err))
+    })
+  }
+}
+
+const Session = function (id = '') {
+  const self = this
+
+  self.id = id
+
+  self.named = (paths = []) => [self.id, ...paths].join('.')
+
+  self.get = function (paths = [], def = null) {
+    return new Promise((resolve) => {
+      try {
+        const data = JSON.parse(sessionStorage.getItem(self.named(paths)))
+        const responseText = JSON.stringify({ status: 'ok', message: null, data })
+
+        resolve(new SuccessResponse({ responseText }))
+      } catch (e) {
+        console.error(e)
+        resolve(def)
+      }
+    })
+  }
+
+  self.set = function (paths = [], data = {}) {
+    return new Promise((resolve, reject) => {
+      try {
+        sessionStorage.setItem(self.named(paths), JSON.stringify(data))
+        const responseText = JSON.stringify({ status: 'ok', message: null, data: {} })
+
+        resolve(new SuccessResponse({ responseText }))
+      } catch (e) {
+        reject(e)
+      }
+    })
+  }
+
+  self.add = function (paths = [], data = {}) {
+    const self = this
+
+    return new Promise((resolve, reject) => {
+      self.get(paths)
+        .then((res) => {
+          const list = res.get('list', [])
+
+          list.push(data)
+
           self.set(paths, { list })
 
           const responseText = JSON.stringify({ status: 'ok', message: null, data: {} })
@@ -221,14 +275,19 @@ const Validator = ({
 
 const API = {}
 
-API.login = ({ username, password }) =>
-  Validator.with({ username, password }).validate({
-    username: ['required'],
-    password: ['required'],
+API.accountsLogin = ({ key, sso }) =>
+  Validator.with({ key }).validate({
+    key: ['required'],
   })
-    .then(() => Ajax.post(['accounts', 'login'], { username, password }))
+    .then(() => Ajax.post(['accounts', 'login'], { key, sso }))
 
-API.listProjects = ({ }) => Ajax.post(['projects'])
+API.projectsList = () =>
+  Ajax.post(['projects', 'list'])
 
-API.saveProject = ({ name, lang, git }) => Ajax.post(['projects', 'save'], { name, lang, git })
-
+API.projectsCreate = ({ name, lang, git }) =>
+  Validator.with({ key }).validate({
+    name: ['required'],
+    lang: ['required'],
+    git: ['required'], 
+  })
+    .then(() => Ajax.post(['projects', 'create'], { name, lang, git }))

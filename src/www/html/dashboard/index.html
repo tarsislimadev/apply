@@ -37,7 +37,7 @@
     const projectList = new nElement()
     app.append(projectList)
 
-    API.listProjects({})
+    API.projectsList()
       .then((res) => res.get('list', [])
         .map((proj, id) => {
           const projEl = new nElement()
