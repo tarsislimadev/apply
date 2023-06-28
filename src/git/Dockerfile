@@ -1,6 +1,6 @@
 FROM tmvdl/alpine
 
-ENV PORT=
+ENV PORT=80
 
 WORKDIR /var/lib/git/project.git
 
