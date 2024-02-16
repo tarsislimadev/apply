@@ -1,4 +1,6 @@
-const db = require('./libs/db')
+const { Database } = require('@brtmvdl/database') // require('./libs/db')
+
+const db = new Database({ type: 'fs', config: '/data' })
 
 db.in('users').new().writeMany({
   username: 'username',
