@@ -6,15 +6,26 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Apply</title>
+  <meta name="google-adsense-account" content="ca-pub-8803365396237758">
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8803365396237758"
+    crossorigin="anonymous"></script>
+  <script type="importmap">
+    {
+      "imports": {
+        "@brtmvdl/frontend": "https://cdn.jsdelivr.net/npm/@brtmvdl/frontend@1.0.15/src/index.js"      }
+    }
+  </script>
 </head>
 
 <body>
   <div id="app"></div>
 
-  <script src="/js/nElement.js"></script>
-  <script src="/js/api.js"></script>
-  <script>
-    const app = nElement.fromId('app')
+  <script type="module">
+    import { HTML, nH1, nLink, nError, nButton, nInputTextGroup } from '@brtmvdl/frontend'
+
+    import { API, Flow } from '../../js/api.js'
+
+    const app = HTML.fromId('app')
 
     const title = new nH1()
     title.setText('Apply')
@@ -23,20 +34,20 @@
     const errorMessage = new nError()
     app.append(errorMessage)
 
-    const projectName = new nElement()
-    projectName.setText('...')
+    const projectName = new nInputTextGroup()
+    projectName.children.input.setValue('')
     app.append(projectName)
 
-    const projectLang = new nElement()
+    const projectLang = new HTML()
     app.append(projectLang)
 
-    const selectedLang = new nElement()
+    const selectedLang = new HTML()
     projectLang.append(selectedLang)
 
-    const projectGitRepo = new nElement()
+    const projectGitRepo = new HTML()
     app.append(projectGitRepo)
 
-    const selectedGit = new nElement()
+    const selectedGit = new HTML()
     app.append(selectedGit)
 
     const addGitRepoButton = ({ tags, text }) => {
@@ -59,7 +70,7 @@
     const saveButton = new nButton()
     saveButton.setText('save')
     saveButton.on('click', () => {
-      const name = projectName.input.getValue()
+      const name = projectName.children.input.getValue()
       const lang = selectedLang.getData('lang')
       const git = selectedGit.getData('git')
 

@@ -6,15 +6,24 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Apply</title>
+  <meta name="google-adsense-account" content="ca-pub-8803365396237758">
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8803365396237758"
+    crossorigin="anonymous"></script>
+  <script type="importmap">
+    {
+      "imports": {
+        "@brtmvdl/frontend": "https://cdn.jsdelivr.net/npm/@brtmvdl/frontend@1.0.15/src/index.js"      }
+    }
+  </script>
 </head>
 
 <body>
   <div id="app"></div>
 
-  <script src="/js/nElement.js"></script>
-  <script src="/js/api.js"></script>
-  <script>
-    const app = nElement.fromId('app')
+  <script type="module" >
+    import { HTML, nH1, nLink, nError, nButton } from '@brtmvdl/frontend'
+
+    const app = HTML.fromId('app')
 
     const title = new nH1()
     title.setText('Apply')
@@ -24,11 +33,11 @@
     projTitle.setText('...')
     app.append(projTitle)
 
-    const projGit = new nElement()
+    const projGit = new HTML()
     projGit.setText('...')
     app.append(projGit)
 
-    const projLang = new nElement()
+    const projLang = new HTML()
     projLang.setText('...')
     app.append(projLang)
 
@@ -53,7 +62,7 @@
     const errorMessage = new nError()
     app.append(errorMessage)
 
-    const project = new nElement()
+    const project = new HTML()
     app.append(project)
 
     Flow.local.get('/project/')

@@ -1,5 +1,5 @@
 
-class Response {
+export class Response {
   status = null
   message = null
   data = {}
@@ -26,7 +26,7 @@ class Response {
   }
 }
 
-class SuccessResponse extends Response {
+export class SuccessResponse extends Response {
   constructor({ responseText }) {
     super()
 
@@ -38,7 +38,7 @@ class SuccessResponse extends Response {
   }
 }
 
-class ErrorResponse extends Response {
+export class ErrorResponse extends Response {
   constructor(type, { responseText }) {
     super()
 
@@ -160,7 +160,7 @@ const Session = function (id = '') {
   }
 }
 
-class Flow {
+export class Flow {
   static local = new Local('flow')
 
   static goTo(name, value = {}) {
@@ -180,11 +180,11 @@ class Flow {
 const l = new Local('api')
 
 const Ajax = {
-  BASE_URL: 'http://0.0.0.0/api/v1',
-  post: (paths = [], data = {}) => {
+  BASE_URL: '/api/v1',
+  get: (url, data = {}) => {
     return new Promise((resolve, reject) => {
       const xhr = new XMLHttpRequest()
-      xhr.open('POST', [Ajax.BASE_URL, ...paths].join('/'), true)
+      xhr.open('GET', url, true)
       xhr.setRequestHeader('Content-Type', 'application/json')
 
       const onComplete = (xhr) => (xhr.status == '200')
@@ -273,21 +273,23 @@ const Validator = ({
   }
 })
 
-const API = {}
+export const API = {}
 
 API.accountsLogin = ({ key, sso }) =>
   Validator.with({ key }).validate({
     key: ['required'],
   })
-    .then(() => Ajax.post(['accounts', 'login'], { key, sso }))
+    .then(() => Ajax.get(['/api/v1/accounts/login/index.json'], { key, sso }))
 
 API.projectsList = () =>
-  Ajax.post(['projects', 'list'])
+  Ajax.get(['/api/v1/projects/list/index.json'])
 
 API.projectsCreate = ({ name, lang, git }) =>
   Validator.with({ key }).validate({
     name: ['required'],
     lang: ['required'],
-    git: ['required'], 
+    git: ['required'],
   })
-    .then(() => Ajax.post(['projects', 'create'], { name, lang, git }))
+    .then(() => Ajax.get(['/api/v1/projects/create/index.json'], { name, lang, git }))
+
+API.saveProject = () => Ajax.get(['/api/v1/index.json'], {})

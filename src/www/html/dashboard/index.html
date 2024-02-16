@@ -6,16 +6,26 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Apply</title>
+  <meta name="google-adsense-account" content="ca-pub-8803365396237758">
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8803365396237758"
+    crossorigin="anonymous"></script>
+  <script type="importmap">
+    {
+      "imports": {
+        "@brtmvdl/frontend": "https://cdn.jsdelivr.net/npm/@brtmvdl/frontend@1.0.15/src/index.js"      }
+    }
+  </script>
 </head>
 
 <body>
   <div id="app"></div>
 
-  <script src="/js/nElement.js"></script>
-  <script src="/js/api.js"></script>
+  <script type="module" >
+    import { HTML, nH1, nLink, nError, nButton } from '@brtmvdl/frontend'
 
-  <script>
-    const app = nElement.fromId('app')
+    import { API, Flow } from '../js/api.js'
+
+    const app = HTML.fromId('app')
 
     const title = new nH1()
     title.setText('Apply')
@@ -34,16 +44,16 @@
     importProjectButton.href('/projects/import/')
     app.append(importProjectButton)
 
-    const projectList = new nElement()
+    const projectList = new HTML()
     app.append(projectList)
 
     API.projectsList()
       .then((res) => res.get('list', [])
         .map((proj, id) => {
-          const projEl = new nElement()
+          const projEl = new HTML()
           projEl.setStyle('margin-bottom', '1rem')
 
-          const nameEl = new nText()
+          const nameEl = new HTML()
           nameEl.setText(proj.name)
           projEl.append(nameEl)
 
@@ -56,7 +66,6 @@
         })
       )
       .catch((err) => errorMessage.setText(err.message))
-
   </script>
 </body>
 

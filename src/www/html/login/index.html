@@ -6,16 +6,26 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Apply</title>
+  <meta name="google-adsense-account" content="ca-pub-8803365396237758">
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8803365396237758"
+    crossorigin="anonymous"></script>
+  <script type="importmap">
+    {
+      "imports": {
+        "@brtmvdl/frontend": "https://cdn.jsdelivr.net/npm/@brtmvdl/frontend@1.0.15/src/index.js"      }
+    }
+  </script>
 </head>
 
 <body>
   <div id="app"></div>
 
-  <script src="/js/nElement.js"></script>
-  <script src="/js/api.js"></script>
+  <script type="module">
+    import { HTML, nH1, nLink, nError, nButton, nInputTextGroup } from '@brtmvdl/frontend'
 
-  <script>
-    const app = nElement.fromId('app')
+    import { API, Flow } from '../js/api.js'
+
+    const app = HTML.fromId('app')
 
     const title = new nH1()
     title.setText('Apply')
@@ -25,23 +35,21 @@
     app.append(errorMessage)
 
     const apiKey = new nInputTextGroup()
-    apiKey.label.setText('API KEY')
-    apiKey.input.placeholder('API KEY')
+    apiKey.children.label.setText('API KEY')
+    apiKey.children.input.setPlaceholder('API KEY')
     app.append(apiKey)
 
     const createLoginButton = (title, sso = '') => (new nButton())
       .setText(title)
       .on('click', () => {
-        const key = apiKey.input.getValue()
+        const key = apiKey.children.input.getValue()
 
-        apiKey.error.clear()
-
-        console.log({ key, sso })
+        apiKey.children.error.clear()
 
         API.accountsLogin({ key, sso })
           .then((res) => {
             Flow.local.set('login', res.get('token'))
-            // Flow.goTo('/dashboard/')
+            Flow.goTo('/dashboard/')
           })
           .catch((err) => {
             if (err.type == 'validation') {
